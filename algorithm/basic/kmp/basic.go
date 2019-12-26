@@ -23,7 +23,7 @@ func (s String)find(t string) int{
 		for ks, vs := range t {
 			if t[ks] != s[ks+k] {
 				find = false
-				break;
+				break
 			}
 			fmt.Printf("match [%d,%d] %c\n",ks, ks+k, vs)
 		}
