@@ -1,5 +1,7 @@
 package rbtree
 
+import "fmt"
+
 const (
 	RED   = true
 	BLACK = false
@@ -76,7 +78,7 @@ func (t *RBTree) Insert(data int) {
 //     a. 将父节点变黑，祖父变红。
 //     b. 以祖父节点为支点，右旋。
 func (t *RBTree) fixUp(n *Node) {
-	var p, g, u *Node   //父，祖，叔节点
+	var p, g, u *Node //父，祖，叔节点
 
 	//父节点为红色，祖父节点必定存在
 	for p = n.parent; p != nil && p.color == RED; p = n.parent {
@@ -116,11 +118,19 @@ func (t *RBTree) fixUp(n *Node) {
 				continue
 			}
 
-			//case2: 叔叔节点是黑色
+			//case2: 叔叔节点是黑色, 空节点也是黑色。
 			if n == p.left {
 				t.rightRotate(p)
 				n, p = p, n
 			}
+			//case3: 连续在一边插入，这样树枝就比较长。
+			// 如下，Y，Z皆红色，明显右边偏重，需要平衡
+			// 左旋，以X为枝点，
+			//      X
+			//       \
+			//        Y
+			//         \
+			//          Z
 
 			p.color = BLACK
 			g.color = RED
@@ -128,7 +138,7 @@ func (t *RBTree) fixUp(n *Node) {
 		}
 	}
 
-	t.root.color = BLACK    //将根节点设置红色。
+	t.root.color = BLACK //将根节点设置红色。
 }
 
 func (n *Node) Delete() {
@@ -156,14 +166,12 @@ func (n *Node) Search(data int) {
 // 2. 将X的父节点赋值给Y的父节点，并更新其子节点。
 // 3. 将X设置为Y的左子树，并将其父设置为Y.
 
-
-func (t RBTree) leftRotate(x *Node) {
+func (t *RBTree) leftRotate(x *Node) {
 	y := x.right
 	if y.left != nil {
 		y.left.parent = x
 	}
 	x.right = y.left
-
 
 	y.parent = x.parent
 	if x.parent == nil {
@@ -195,8 +203,8 @@ func (t RBTree) leftRotate(x *Node) {
 // 1. 将x右子节点(b)赋给Y的左节点，同时将其父节点设置为Y
 // 2. 将y的父节点赋值给x的父节点，并更新其子节点。
 // 3. 将Y设置为X的右子树，并将其父设置为X.
-func (t *RBTree) rightRotate(x *Node) {
-	y := x.parent
+func (t *RBTree) rightRotate(y *Node) {
+	x := y.left
 	y.left = x.right
 	if x.right != nil {
 		x.right.parent = y
@@ -221,6 +229,48 @@ func (t *RBTree) rightRotate(x *Node) {
 //change color.
 func (n *Node) discolor(c bool) {
 	n.color = c
+}
+
+//前序遍历：根结点 ---> 左子树 ---> 右子树
+//递归
+func (n *Node) preTraverse() {
+	fmt.Print(n.data, " ")
+
+	if n.left != nil {
+		n.left.preTraverse()
+	}
+
+	if n.right != nil {
+		n.right.preTraverse()
+	}
+}
+
+//中序遍历： 左子树 ---> 根结点 --->右子树
+//递归
+func (n *Node) inTraverse() {
+	if n.left != nil {
+		n.left.inTraverse()
+	}
+
+	fmt.Print(n.data, " ")
+
+	if n.right != nil {
+		n.right.inTraverse()
+	}
+}
+
+//中序遍历： 左子树 --->右子树 ---> 根结点
+//递归
+func (n *Node) postTraverse() {
+	if n.left != nil {
+		n.left.postTraverse()
+	}
+
+	if n.right != nil {
+		n.right.postTraverse()
+	}
+
+	fmt.Print(n.data, " ")
 }
 
 //

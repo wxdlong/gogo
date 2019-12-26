@@ -1,9 +1,12 @@
 package rbtree
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestRBTree_Insert(t *testing.T) {
-	rb:=NewTree(3)
+	rb := NewTree(3)
 	rb.Insert(4)
 	rb.Insert(14)
 	rb.Insert(15)
@@ -12,6 +15,13 @@ func TestRBTree_Insert(t *testing.T) {
 	rb.Insert(1)
 	rb.Insert(2)
 	rb.Insert(5)
-    rb.Insert(22)
+	rb.Insert(22)
+	fmt.Println("\n前序遍历")
+	rb.root.preTraverse()
+	fmt.Println("\n中序遍历")
 
+	rb.root.inTraverse()
+	fmt.Println("\n后序遍历")
+
+	rb.root.postTraverse()
 }
