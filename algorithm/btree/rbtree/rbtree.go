@@ -245,6 +245,44 @@ func (n *Node) preTraverse() {
 	}
 }
 
+//前序遍历：根结点 ---> 左子树 ---> 右子树
+//非递归
+func (t *RBTree) preTraverse2() {
+	st := newStack()
+	root := t.root
+
+	for root != nil || !st.isEmpty() {
+		if root != nil {
+			fmt.Print(root.data, " ")
+			st.push(root)
+			root = root.left
+		} else {
+			root = st.pop().right
+		}
+	}
+}
+
+//前序遍历：根结点 ---> 左子树 ---> 右子树
+//非递归
+// https://ghh3809.github.io/2018/08/06/morris-traversal/
+func (t *RBTree) preTraverse3() {
+	st := newStack()
+	st.push(t.root)
+
+	//先打印输出根结点，然后依次入栈右，左子树。
+	//出栈时顺序刚好左->右。
+	for !st.isEmpty() {
+		root := st.pop()
+		fmt.Print(root.data, " ")
+		if root.right != nil {
+			st.push(root.right)
+		}
+		if root.left != nil {
+			st.push(root.left)
+		}
+	}
+}
+
 //中序遍历： 左子树 ---> 根结点 --->右子树
 //递归
 func (n *Node) inTraverse() {
@@ -259,7 +297,25 @@ func (n *Node) inTraverse() {
 	}
 }
 
-//中序遍历： 左子树 --->右子树 ---> 根结点
+//中序遍历： 左子树 ---> 根结点 --->右子树
+//非递归
+func (t *RBTree) inTraverse() {
+	st := newStack()
+	root := t.root
+
+	for root != nil || !st.isEmpty() {
+		if root != nil {
+			st.push(root)
+			root = root.left
+		} else {
+			root = st.pop()
+			fmt.Print(root.data, " ")
+			root = root.right
+		}
+	}
+}
+
+//后序遍历： 左子树 --->右子树 ---> 根结点
 //递归
 func (n *Node) postTraverse() {
 	if n.left != nil {
@@ -273,16 +329,98 @@ func (n *Node) postTraverse() {
 	fmt.Print(n.data, " ")
 }
 
-//
-//func (t *RBTree) String() string{
-//	n:=t.root
-//	s:=""
-//	for i=20; i>0; i++ {
-//		s+=" "
-//	}
-//	for i=20; i>0; i++ {
-//		s+=" "
-//	}
-//
-//
-//}
+//后序遍历： 左子树 --->右子树 ---> 根结点
+//非递归： 增加标志位。
+func (t *RBTree) postTraverse() {
+	st := newStack()
+	root := t.root
+	for !st.isEmpty() || root != nil {
+		for root != nil {
+			st.pushLeft(root)
+			root = root.left
+		}
+
+		tag, pop := st.popTag()
+		if tag == left {
+			st.pushRight(pop)
+			root = pop.right
+		} else {
+			fmt.Print(pop.data, " ")
+			root = nil
+		}
+	}
+}
+
+//后序遍历： 左子树 --->右子树 ---> 根结点
+//非递归
+func (t *RBTree) postTraverse2() {
+
+	st := newStack()
+	root := t.root
+	var lastRight *Node
+	for !st.isEmpty() || root != nil {
+		//根->右->左， 遍历入栈，此后出栈顺序必定是左-->右-->根
+		for ; root != nil; root = root.left {
+			st.push(root)
+			if root.right != nil {
+				st.push(root.right)
+			}
+		}
+		pop := st.pop()
+		//当栈顶右子节点己经输出，则可直接输出，否则，以当前节点，相当于右子树继续循环
+		//当遍历右子树时，右子树根经历了push->pop->push->pop
+		//第一次必定是最左端节点，其右子节点为nil == lastRight初始值nil，输出
+		if pop.right == lastRight {
+			fmt.Print(pop.data, " ")
+			lastRight = pop //告诉下次出栈节点，其右子节点己经输出
+		} else {
+			root = pop
+			lastRight = nil //重新循环子树，重置lastRight=nil
+		}
+	}
+}
+
+//后序遍历： 左子树 --->右子树 ---> 根结点
+//非递归3：最优雅的实现。
+func (t *RBTree) postTraverse3() {
+	st := newStack()
+	st.push(t.root)
+	var lastNode *Node
+	for !st.isEmpty() {
+		root := st.pop()
+		//如果当前节点是叶子节点或者己经访问过该节点(其左右子树己经打钱过)。
+		if (root.left == nil && root.right == nil) || (root.left == lastNode || root.right == lastNode) {
+			fmt.Print(root.data, " ")
+			lastNode = root
+		} else {
+			//这时可能是右子树的开始。依次入栈根，右，左。
+			//出栈时的顺序必然是左，右，根。
+			//但这个节点会入栈出栈两次。
+			st.push(root)
+			if root.right != nil {
+				st.push(root.right)
+			}
+			if root.left != nil {
+				st.push(root.left)
+			}
+		}
+	}
+}
+
+//层次遍历
+func (t *RBTree) levelTraverse() {
+	q := newQueue()
+	q.offer(t.root)
+
+	for !q.isEmpty() {
+		root := q.poll()
+		fmt.Print(root.data, " ")
+		if root.left != nil {
+			q.offer(root.left)
+		}
+		if root.right != nil {
+			q.offer(root.right)
+		}
+
+	}
+}
