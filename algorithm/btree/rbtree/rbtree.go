@@ -2,6 +2,8 @@ package rbtree
 
 import "fmt"
 
+//https://www.jianshu.com/p/49c8cfd07410
+
 const (
 	RED   = true
 	BLACK = false
