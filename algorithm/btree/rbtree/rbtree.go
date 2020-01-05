@@ -409,7 +409,7 @@ func (t *RBTree) postTraverse3() {
 	}
 }
 
-//层次遍历
+//层次遍历,广度优先搜索
 func (t *RBTree) levelTraverse() {
 	q := newQueue()
 	q.offer(t.root)

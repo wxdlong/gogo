@@ -8,39 +8,27 @@ package beibao
 //    D  4         40
 
 type node struct {
-	name            string
-	weight          int
-	value           int
-	left, right     *node
-	parent, brother *node
-	selected        bool
+	cv, rv int //当前背包物品价值，剩余物品价值
+	rw, id int //剩余容量， 物品ID
+	xs     []bool
+}
+
+type good struct {
+	name          string
+	weight, value int
 }
 
 type tree struct {
 	root *node
 }
 
-type stacks struct {
-	head *stack
+type queues struct {
+	head *queue
+	tail *queue
 	size int
 }
 
-type stack struct {
-	*node
-	next *node
+type queue struct {
+	value *node
+	next  *node
 }
-
-//
-//func NewTree(ns []*node) *tree {
-//	t := &tree{}
-//
-//	t.root = &node{}
-//	root := t.root
-//	for i := 0; i < len(ns); i++ {
-//		n: = ns[i]
-//		root.left = ns[i]
-//
-//		root.right = ns[i]
-//	}
-//	return t
-//}

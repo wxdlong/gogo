@@ -16,6 +16,8 @@ func (dx *dongxi) String() string {
 	return fmt.Sprintf("[%s, 重量: %d, 价值: %d]", dx.name, dx.weight, dx.value)
 }
 
+//参考
+//https://www.jianshu.com/p/c289cd8ae0ed
 func backpack(dx []dongxi, total int) int {
 	table := make([][]int, len(dx))
 
