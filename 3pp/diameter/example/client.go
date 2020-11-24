@@ -2,22 +2,24 @@ package example
 
 import (
 	"errors"
+	"log"
+	"math/rand"
+	"net"
+	"strconv"
+	"time"
+
 	"github.com/fiorix/go-diameter/diam"
 	"github.com/fiorix/go-diameter/diam/avp"
 	"github.com/fiorix/go-diameter/diam/datatype"
 	"github.com/fiorix/go-diameter/diam/dict"
 	"github.com/fiorix/go-diameter/diam/sm"
 	"github.com/fiorix/go-diameter/diam/sm/smpeer"
-	"log"
-	"math/rand"
-	"net"
-	"strconv"
-	"time"
 )
 
 func helloClient() {
 
 	err := dict.Default.LoadFile("hello.xml")
+
 	if err != nil {
 		log.Fatal(err)
 	}
